@@ -37,9 +37,19 @@ page_footer = """
 </html>
 """
 
+error_dict = {
+"user_blank":"Please enter a user name",
+"user_invalid":"Valid user names are 3 to 20 characters and can include letters and numbers only",
+"pwd_blank":"Please enter a password",
+"pwd_invalid":"Valid passwords include 3 to 20 characters",
+"pwd_mismatch":"Passwords do not match",
+"email_blank":"Please enter an email address",
+"email_invalid":"Email address is invalid"
+}
 class Index(webapp2.RequestHandler):
 
-    def GetErrorMsg(error):
+    def GetErrorMsg(self, error):
+        return error_dict[error]
 
 
     def get(self):
@@ -82,32 +92,39 @@ class AddUser(webapp2.RequestHandler):
     def post(self):
         user_name = cgi.escape(self.request.get("user_name"), quote=True)
         if user_name == "":
-            error_user = "Please enter a user name"
-        elif
+            error = "user_blank"
+            return error
         else:
-            new_movie_element = "<strong>" + new_movie + "</strong>"
-            sentence = new_movie_element + " has been added to your Watchlist!"
+            user_MatchObj = re.match(user_name, USER_REGEX)
+            if not user_MatchObj:
+                error = "user_invalid"
+                return error
+        password = cgi.escape(self.request.get("password"), quote=True)
+        if password = "":
+            error = "pwd_blank"
+            return error
+        else:
+            password_MatchObj = re.match(password, PWD_REGEX)
+            if not password_MatchObj:
+                error = "pwd_invalid"
+                return error
+        password_check = cgi.escape(self.request.get("password_check"), quote=True)
+        if password != password_check:
+            error = "pwd_mismatch"
+            return error
+        user_email = cgi.escape(self.request.get("user_email"), quote=True)
+        if user_email = "":
+            error = "email_blank"
+            return error
+        else:
+            email_MatchObj = re.match(user_email, EMAIL_REGEX)
+            if not email_MatchObj:
+                error = "email_invalid"
+                return error
+        return ""
 
-            content = page_header + "<p>" + sentence + "</p>" + page_footer
-            self.response.write(content)
 
 
-
-class CrossOffMovie(webapp2.RequestHandler):
-    """ Handles requests coming in to '/cross-off'
-        e.g. www.flicklist.com/cross-off
-    """
-
-    def post(self):
-        # look inside the request to figure out what the user typed
-        crossed_off_movie = self.request.get("crossed-off-movie")
-
-        # build response content
-        crossed_off_movie_element = "<strike>" + crossed_off_movie + "</strike>"
-        confirmation = crossed_off_movie_element + " has been crossed off your Watchlist."
-
-        content = page_header + "<p>" + confirmation + "</p>" + page_footer
-        self.response.write(content)
 
 
 app = webapp2.WSGIApplication([
