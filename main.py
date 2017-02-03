@@ -71,7 +71,7 @@ class Index(webapp2.RequestHandler):
             </label>{1}
             <label>
                 Retype Password:
-                <input type="password" name="password_check" />
+                <input type="password" name="password_match" />
             </label>{2}
             <label>
                 Email:
@@ -90,9 +90,18 @@ class Index(webapp2.RequestHandler):
 class AddUser(webapp2.RequestHandler):
 
     def post(self):
+        user_name = cgi.escape(self.request.get(user_name), quote=True)
+        error_user = GetUserErrors(user_name)
+        password = cgi.escape(self.request.get(password), quote=True)
+        error_password = GetPwdErrors(password)
+        password_match = cgi.escape(self.request.get(password_match), quote=True)
+        error_match = GetMatchErrors(password_match)
+        user_email = cgi.escape(self.request.get(user_email), quote=True)
+        error_email = GetEmailErrors(user_email)
+        if error_user or error_password or error_match or error_email:
+            
 
-
-    def GetUserErrors(self, user_nameerror):
+    def GetUserErrors(user_name):
         if user_name == "":
             error = "user_blank"
             return error
