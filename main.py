@@ -90,7 +90,9 @@ class Index(webapp2.RequestHandler):
 class AddUser(webapp2.RequestHandler):
 
     def post(self):
-        user_name = cgi.escape(self.request.get("user_name"), quote=True)
+
+
+    def GetUserErrors(self, user_nameerror):
         if user_name == "":
             error = "user_blank"
             return error
@@ -99,7 +101,10 @@ class AddUser(webapp2.RequestHandler):
             if not user_MatchObj:
                 error = "user_invalid"
                 return error
-        password = cgi.escape(self.request.get("password"), quote=True)
+        return ""
+
+    def GetPwdErrors(self, password):
+
         if password = "":
             error = "pwd_blank"
             return error
@@ -108,11 +113,16 @@ class AddUser(webapp2.RequestHandler):
             if not password_MatchObj:
                 error = "pwd_invalid"
                 return error
-        password_check = cgi.escape(self.request.get("password_check"), quote=True)
-        if password != password_check:
+        return ""
+
+    def GetMatchErrors(self, password, match):
+
+        if password != match:
             error = "pwd_mismatch"
             return error
-        user_email = cgi.escape(self.request.get("user_email"), quote=True)
+        return ""
+
+    def GetEmailErrors(self, user_email):
         if user_email = "":
             error = "email_blank"
             return error
@@ -129,6 +139,6 @@ class AddUser(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
     ('/', Index),
-    ('/add', AddUser),
-    ('/cross-off', CrossOffMovie)
+    ('/add', AddUser)
+
 ], debug=True)
