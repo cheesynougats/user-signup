@@ -54,10 +54,18 @@ class Index(webapp2.RequestHandler):
 
     def get(self):
 
-        error_user = GetErrorMsg(self.request.get('error_user'))
-        error_password = GetErrorMsg(self.request.get('error_password'))
-        error_match = GetErrorMsg(self.request.get('error_match'))
-        error_email = GetErrorMsg(self.request.get('error_email'))
+        error_user = ""
+        if self.request.get('error_user'):
+            error_user = self.GetErrorMsg(self.request.get('error_user'))
+        error_password = ""
+        if self.request.get('error_password'):
+            error_password = self.GetErrorMsg(self.request.get('error_password'))
+        error_match = ""
+        if self.request.get('error_match'):
+            error_match = self.GetErrorMsg(self.request.get('error_match'))
+        error_email = ""
+        if self.request.get('error_email'):
+            error_email = self.GetErrorMsg(self.request.get('error_email'))
 
         new_user_form = """
         <form action="/add" method="post">
@@ -79,7 +87,7 @@ class Index(webapp2.RequestHandler):
             </label>{3}
             <input type="submit" value="Add Me!"/>
         </form>
-        """.format(error_user, error_password, error_match, error_email, user_name, user_email)
+        """.format(error_user, error_password, error_match, error_email, self.request.get('user_name'), self.request.get('user_email'))
 
 
 
@@ -105,7 +113,7 @@ class AddUser(webapp2.RequestHandler):
             emailerror_param = "error_email=" + error_email
             username_param = "user_name=" + user_name
             email_param = "user_email=" + user_email
-            redirect_address = "/?" + usererror_param + "&" + passworderror_param + "&" + matcherror_param + "&" emailerror_param + "&" + username_param + "&" + email_param
+            redirect_address = "/?" + usererror_param + "&" + passworderror_param + "&" + matcherror_param + "&" + emailerror_param + "&" + username_param + "&" + email_param
             self.redirect(redirect_address)
         else:
             self.response.write("Welcome, " + user_name + "!")
@@ -123,7 +131,7 @@ class AddUser(webapp2.RequestHandler):
 
     def GetPwdErrors(self, password):
 
-        if password = "":
+        if password == "":
             error = "pwd_blank"
             return error
         else:
@@ -141,7 +149,7 @@ class AddUser(webapp2.RequestHandler):
         return ""
 
     def GetEmailErrors(self, user_email):
-        if user_email = "":
+        if user_email == "":
             error = "email_blank"
             return error
         else:
