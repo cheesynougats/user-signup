@@ -63,7 +63,7 @@ class Index(webapp2.RequestHandler):
         <form action="/add" method="post">
             <label>
                 Name:
-                <input type="text" name="user_name" />
+                <input type="text" name="user_name" value="{4}"/>
             </label>{0},
             <label>
                 Password:
@@ -75,11 +75,11 @@ class Index(webapp2.RequestHandler):
             </label>{2}
             <label>
                 Email:
-                <input type="text" name="user_email" />
+                <input type="text" name="user_email" value="{5}"/>
             </label>{3}
             <input type="submit" value="Add Me!"/>
         </form>
-        """.format(error_user, error_password, error_match, error_email)
+        """.format(error_user, error_password, error_match, error_email, user_name, user_email)
 
 
 
@@ -99,7 +99,16 @@ class AddUser(webapp2.RequestHandler):
         user_email = cgi.escape(self.request.get(user_email), quote=True)
         error_email = GetEmailErrors(user_email)
         if error_user or error_password or error_match or error_email:
-            
+            usererror_param = "error_user=" + error_user
+            passworderror_param = "error_password=" + error_password
+            matcherror_param = "error_match=" + error_match
+            emailerror_param = "error_email=" + error_email
+            username_param = "user_name=" + user_name
+            email_param = "user_email=" + user_email
+            redirect_address = "/?" + usererror_param + "&" + passworderror_param + "&" + matcherror_param + "&" emailerror_param + "&" + username_param + "&" + email_param
+            self.redirect(redirect_address)
+        else:
+            self.response.write("Welcome, " + user_name + "!")
 
     def GetUserErrors(user_name):
         if user_name == "":
