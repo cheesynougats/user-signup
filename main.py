@@ -154,8 +154,7 @@ class AddUser(webapp2.RequestHandler):
 
     def GetEmailErrors(self, user_email):
         if user_email == "":
-            error = "email_blank"
-            return error
+            return ""
         else:
             email_MatchObj = re.match(EMAIL_REGEX, user_email )
             if not email_MatchObj:
