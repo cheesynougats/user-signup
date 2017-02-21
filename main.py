@@ -72,19 +72,23 @@ class Index(webapp2.RequestHandler):
             <label>
                 Name:
                 <input type="text" name="user_name" value="{4}"/>
-            </label>{0},
+            </label>{0}
+            <br />
             <label>
                 Password:
                 <input type="password" name="password" />
             </label>{1}
+            <br />
             <label>
                 Retype Password:
                 <input type="password" name="password_match" />
             </label>{2}
+            <br />
             <label>
                 Email:
                 <input type="text" name="user_email" value="{5}"/>
             </label>{3}
+            <br />
             <input type="submit" value="Add Me!"/>
         </form>
         """.format(error_user, error_password, error_match, error_email, self.request.get('user_name'), self.request.get('user_email'))
@@ -98,14 +102,14 @@ class Index(webapp2.RequestHandler):
 class AddUser(webapp2.RequestHandler):
 
     def post(self):
-        user_name = cgi.escape(self.request.get(user_name), quote=True)
-        error_user = GetUserErrors(user_name)
-        password = cgi.escape(self.request.get(password), quote=True)
-        error_password = GetPwdErrors(password)
-        password_match = cgi.escape(self.request.get(password_match), quote=True)
-        error_match = GetMatchErrors(password_match)
-        user_email = cgi.escape(self.request.get(user_email), quote=True)
-        error_email = GetEmailErrors(user_email)
+        user_name = cgi.escape(self.request.get("user_name"), quote=True)
+        error_user = self.GetUserErrors(user_name)
+        password = cgi.escape(self.request.get("password"), quote=True)
+        error_password = self.GetPwdErrors(password)
+        password_match = cgi.escape(self.request.get("password_match"), quote=True)
+        error_match = self.GetMatchErrors(password, password_match)
+        user_email = cgi.escape(self.request.get("user_email"), quote=True)
+        error_email = self.GetEmailErrors(user_email)
         if error_user or error_password or error_match or error_email:
             usererror_param = "error_user=" + error_user
             passworderror_param = "error_password=" + error_password
@@ -118,12 +122,12 @@ class AddUser(webapp2.RequestHandler):
         else:
             self.response.write("Welcome, " + user_name + "!")
 
-    def GetUserErrors(user_name):
+    def GetUserErrors(self, user_name):
         if user_name == "":
             error = "user_blank"
             return error
         else:
-            user_MatchObj = re.match(user_name, USER_REGEX)
+            user_MatchObj = re.match(USER_REGEX, user_name )
             if not user_MatchObj:
                 error = "user_invalid"
                 return error
@@ -135,7 +139,7 @@ class AddUser(webapp2.RequestHandler):
             error = "pwd_blank"
             return error
         else:
-            password_MatchObj = re.match(password, PWD_REGEX)
+            password_MatchObj = re.match(PWD_REGEX, password)
             if not password_MatchObj:
                 error = "pwd_invalid"
                 return error
@@ -153,7 +157,7 @@ class AddUser(webapp2.RequestHandler):
             error = "email_blank"
             return error
         else:
-            email_MatchObj = re.match(user_email, EMAIL_REGEX)
+            email_MatchObj = re.match(EMAIL_REGEX, user_email )
             if not email_MatchObj:
                 error = "email_invalid"
                 return error
